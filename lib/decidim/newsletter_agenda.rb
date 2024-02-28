@@ -48,19 +48,30 @@ module Decidim
           default_link_color: "#7636D2",
           default_address_text: "<b>Canòdrom</b><br>" \
                                 "<b>Ateneu d'Innovació Digital i Democràtica</b><br>" \
-                                "C/Concepció Arenal 165<br>09027 Barcelona <a href='https://canodrom.barcelona'>canodrom.barcelona</a><br>" \
-                                "<a href='mailto:hola@canodrom.com'>hola@canodrom.com</a>",
-          social_handlers: [:twitter, :instagram, :facebook, :youtube, :github, :mastodon, :telegram, :peertube]
-
+                                "C/Concepción Arenal 165<br>08027 Barcelona <a href='https://canodrom.barcelona'>canodrom.barcelona</a><br>" \
+                                "<a href='mailto:hola@canodrom.barcelona'>hola@canodrom.barcelona</a>",
+          social_handlers: {
+            twitter: nil,
+            instagram: nil,
+            facebook: nil,
+            youtube: nil,
+            github: nil,
+            mastodon: "https://mastodont.cat/@canodrombcn",
+            telegram: "https://t.me/canodrombcn",
+            peertube: nil
+          }
         },
         capitalitat: {
           default_background_color: "#524F9F",
           default_font_color_over_bg: "#FFFFFF",
           default_link_color: "#524F9F",
           default_address_text: "<b>European Capital of Democracy</b><br>" \
-                                "C/Concepció Arenal 165<br>09027 Barcelona <a href='https://capitalofdemocracy.barcelona'>capitalofdemocracy.barcelona</a><br>" \
+                                "C/Concepció Arenal 165<br>08027 Barcelona <a href='https://capitalofdemocracy.barcelona'>capitalofdemocracy.barcelona</a><br>" \
                                 "<a href='mailto:rgpd@pemb.cat'>rgpd@pemb.cat</a>",
-          social_handlers: [:twitter, :youtube]
+          social_handlers: {
+            twitter: nil,
+            youtube: nil
+          }
         }
       }
     end

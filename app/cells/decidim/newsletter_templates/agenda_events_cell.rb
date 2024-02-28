@@ -100,13 +100,15 @@ module Decidim
       end
 
       def all_handler_attributes
-        @all_handler_attributes ||= social_handlers&.to_h do |handler|
+        @all_handler_attributes ||= social_handlers&.to_h do |handler, default|
           key = "#{handler}_handler"
-          [key, model.settings[key] || organization_handler_attributes[key]]
+          [key, model.settings[key] || organization_handler_attributes[key] || default]
         end
       end
 
       def network_url(value, network)
+        return value if value.start_with?("http")
+
         case network
         when "telegram"
           "https://#{network}.me/#{value}"

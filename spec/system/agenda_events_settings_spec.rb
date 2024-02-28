@@ -81,7 +81,7 @@ describe "Agenda events settings", type: :system do
         expect(page).to have_content("Footer event title")
 
         expect(page).to have_content("Organization address")
-        expect(page).to have_content("C/Concepció Arenal 165")
+        expect(page).to have_content("C/Concepción Arenal 165")
         expect(page).to have_content("Social links title")
       end
     end
@@ -153,7 +153,7 @@ describe "Agenda events settings", type: :system do
           end
           expect(page).to have_css("a[href='http://www.example.org/footer']", count: 3)
 
-          expect(page).to have_css("img[src*='avatar.jpg']", count: 2)
+          expect(page).to have_css("img[src*='avatar.jpg']", count: 1)
           expect(page).to have_css("img[src*='city.jpeg']", count: 1)
           expect(page).to have_css("img[src*='city2.jpeg']", count: 4)
           expect(page).to have_css("img[src*='city3.jpeg']", count: 3)
@@ -164,7 +164,7 @@ describe "Agenda events settings", type: :system do
           expect(page).to have_css(".footer-social__icon[title='Twitter']")
           expect(page).to have_css(".footer-social__icon[title='Mastodon']")
           expect(page).not_to have_css(".footer-social__icon[title='Facebook']")
-          expect(page).not_to have_css(".footer-social__icon[title='Telegram']")
+          expect(page).to have_css(".footer-social__icon[title='Telegram']")
 
           # no links or images without host
           expect(page.body).not_to include("src=\"/")

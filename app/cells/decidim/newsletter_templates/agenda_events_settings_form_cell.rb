@@ -41,8 +41,8 @@ module Decidim
           settings[:footer_address_text] = default_address_text if settings[:footer_address_text].blank?
 
           # social handlers
-          social_handlers&.each do |handler|
-            settings["#{handler}_handler"] ||= organization_handler_attributes["#{handler}_handler"]
+          social_handlers&.each do |handler, default|
+            settings["#{handler}_handler"] ||= organization_handler_attributes["#{handler}_handler"] || default
           end
 
           # boxes

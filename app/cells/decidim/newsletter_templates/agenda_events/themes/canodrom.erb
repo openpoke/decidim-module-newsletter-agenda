@@ -32,7 +32,9 @@
     padding-right: 0;
   }
 
-  td.introduction,
+  .introduction {
+    padding: 0 0;
+  }
   .middle,
   .footer {
     padding: 0 32px;
@@ -99,7 +101,7 @@
   }
 
   .box-link,
-  .box-link a {
+  .box-link a{
     color: <%= background_color %> !important;
     margin-top: 20px;
   }
@@ -113,6 +115,13 @@
     min-width: 70%;
     text-align: center;
   }
+
+  .footer-title,
+    .footer-box-title,
+    .footer-box-date-time,
+    .footer-box-link {
+      color: #ffffff !important;
+    }
 
   .footer-box-title {
     font-size: 18px;
@@ -137,6 +146,9 @@
     /*margin: 0 0 20px 0;*/
   }
 
+  .footer-bottom a {
+    color: #ffffff !important;
+  }
   .footer-bottom__logo {
     height: 40px;
   }
@@ -209,15 +221,13 @@
   <tr>
     <td class="introduction">
       <table class="introduction">
-        <% if has_organization_logo? %>
-          <tr>
-            <td style="text-align:center;padding-bottom: 50px;" colspan="2">
-              <%= image_tag organization_logo_url %>
-            </td>
-          </tr>
-        <% end %>
         <tr>
-          <td style="font-size:30px;line-height:30px;font-weight: bold;text-align:center;" colspan="2">
+          <td style="text-align:center;padding-bottom: 50px;" colspan="2">
+            <%= image_tag asset_pack_url("media/images/logo-newsletter.png", **host_options) %>
+          </td>
+        </tr>
+        <tr>
+          <td style="font-size:30px;line-height:30px;font-weight: bold;text-align:center;padding:0 32px;" colspan="2">
             <%= translated_text_for :intro_title %>
           </td>
         </tr>
@@ -227,7 +237,7 @@
               <table class="row content image">
                 <tr align="center">
                   <th class="small-12 first columns" align="center">
-                    <%= image_tag image_url(:main_image, resize_to_fit: [653, 436]), width: "653", height: "436" %>
+                    <%= image_tag image_url(:main_image, resize_to_fit: [653, 436]), width: "653" %>
                   </th>
                   <th class="expander"></th>
                 </tr>
@@ -236,7 +246,7 @@
           </tr>
         <% end %>
         <tr>
-          <td class="introduction-text">
+          <td class="introduction-text" style="padding:0 32px;">
             <%= translated_text_for :intro_text %>
           </td>
         </tr>
@@ -247,7 +257,7 @@
     <td class="agenda">
       <table class="agenda" width="100%">
         <tr>
-          <td class="top" style="vertical-align: middle; padding: 0 120px; text-align: center; font-size:24px;"
+          <td class="top" height="290" width="580" style="vertical-align: middle; padding: 0 120px; text-align: center; font-size:24px;"
               colspan="2">
             <%= translated_text_for :body_title %>
             <div class="body-subtitle" style="text-align: center; margin-top: 20px">
@@ -265,7 +275,7 @@
                       <div class="box-image">
                         <% if has_image?("body_box_image_#{num}") %>
                           <%= link_to link_for("body_box_link_url_#{num}") do %>
-                            <%= image_tag(image_url("body_box_image_#{num}"), width: "238", height: "134", style: "width:100%; max-width:500px; display:block; margin:0 auto;") %>
+                            <%= image_tag(image_url("body_box_image_#{num}"), width: "238", style: "width:100%; max-width:500px; display:block; margin:0 auto;") %>
                           <% end %>
                         <% end %>
                       </div>
@@ -278,10 +288,12 @@
                       <div class="box-text">
                         <%= translated_text_for "body_box_description_#{num}" %>
                       </div>
-                      <div class="box-link">
-                        <% link = link_for("body_box_link_url_#{num}") %>
-                        <%= link_to translated_text_for("body_box_link_text_#{num}"), link, target: :blank if link %>
-                      </div>
+                      <% link = link_for("body_box_link_url_#{num}") %>
+                      <% if link.present? %>
+                        <div class="box-link">
+                          <%= link_to translated_text_for("body_box_link_text_#{num}"), link, target: :blank if link %>
+                        </div>
+                      <% end %>
                     </td>
                   <% end %>
                 </tr>
@@ -290,9 +302,9 @@
           </td>
         </tr>
         <tr style="text-align: center;vertical-align: middle;">
-          <td class="bottom" style="text-align: center;vertical-align: middle;">
+          <td class="bottom" width="580px" height="290px" style="text-align: center;vertical-align: middle;">
             <%= translated_text_for :body_final_text %>
-            <%= image_tag asset_pack_url("media/images/arrow-down.png", **host_options) %>
+            <%= image_tag asset_pack_url("media/images/down-lilac.png", **host_options) %>
           </td>
         </tr>
       </table>
@@ -310,7 +322,7 @@
           <% (1..3).each do |num| %>
             <td class="footer-box" style="padding: 10px;margin-bottom: 30px;" width="33%">
               <div class="box-image">
-                <%= image_tag(image_url("footer_box_image_#{num}", resize_to_fill: [198, 132]), width: "198", height: "132") if has_image?("footer_box_image_#{num}") %>
+                <%= image_tag(image_url("footer_box_image_#{num}", resize_to_fill: [152, 101]), width: "152", height: "101") if has_image?("footer_box_image_#{num}") %>
               </div>
               <div class="footer-box-date-time">
                 <%= translated_text_for "footer_box_date_time_#{num}" %>
@@ -347,7 +359,7 @@
         <table class="footer-logo" style="margin: 0;">
           <tr>
             <td class="footer-bottom" style="padding: 20px 0;">
-              <%= image_tag footer_image_url, class: "footer-bottom__logo", width: "180", height: "80" %>
+              <%= image_tag footer_image_url, class: "footer-bottom__logo", width: "150", height: "50" %>
             </td>
           </tr>
         </table>

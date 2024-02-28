@@ -196,12 +196,12 @@ module Decidim
                 translated: true,
                 preview: -> { I18n.t("decidim.newsletter_templates.agenda_events.footer_additional_text_preview") }
               )
-              (Decidim::NewsletterAgenda.social_handlers || properties[:social_handlers])&.each do |handler|
+              (Decidim::NewsletterAgenda.social_handlers || properties[:social_handlers])&.each do |handler, default|
                 settings.attribute(
                   "#{handler}_handler",
                   type: :text,
                   translated: false,
-                  preview: -> { "my-#{handler}" }
+                  preview: -> { default || "my-#{handler}" }
                 )
               end
             end

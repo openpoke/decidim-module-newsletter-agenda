@@ -85,8 +85,8 @@
             <%= t(".social_handlers") %>
           </label>
           <ul class="tabs tabs--lang" data-tabs id="organization_social_handlers">
-            <% social_handlers&.each do |handler| %>
-              <li class="tabs-title <% if handler == social_handlers.first %> is-active <% end %>">
+            <% social_handlers&.each do |handler, default| %>
+              <li class="tabs-title <% if handler == social_handlers.keys.first %> is-active <% end %>">
                 <a href="#<%= handler %>" <% if handler == social_handlers.first %> aria-selected="true" <% end %>>
                   <%= t(".#{handler}") %>
                 </a>
@@ -95,8 +95,8 @@
           </ul>
         </div>
         <div class="tabs-content" data-tabs-content="organization_social_handlers">
-          <% social_handlers&.each do |handler| %>
-            <div class="tabs-panel <% if handler == social_handlers.first %> is-active <% end %>" id="<%= handler %>">
+          <% social_handlers&.each do |handler, default| %>
+            <div class="tabs-panel <% if handler == social_handlers.keys.first %> is-active <% end %>" id="<%= handler %>">
               <%= settings_fields.text_field "#{handler}_handler", placeholder: t(".wont_show"), label: false %>
             </div>
           <% end %>
