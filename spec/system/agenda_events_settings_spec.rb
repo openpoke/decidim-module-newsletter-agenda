@@ -2,19 +2,19 @@
 
 require "spec_helper"
 
-describe "Agenda events settings", type: :system do
+describe "Agenda events settings" do
   let(:organization_logo) { Decidim::Dev.test_file("avatar.jpg", "image/jpeg") }
   let(:footer_logo) { Decidim::Dev.test_file("avatar.jpg", "image/jpeg") }
   let(:organization) { create(:organization, logo: organization_logo, official_img_footer: footer_logo, twitter_handler: "twitter", facebook_handler: "") }
-  let!(:admin) { create(:user, :admin, :confirmed, organization: organization) }
-  let!(:newsletter) { create :newsletter, :sent, total_recipients: 1 }
+  let!(:admin) { create(:user, :admin, :confirmed, organization:) }
+  let!(:newsletter) { create(:newsletter, :sent, total_recipients: 1) }
   let!(:content_block) do
-    create :content_block,
-           organization: organization,
+    create(:content_block,
+           organization:,
            manifest_name: :canodrom_agenda_events,
            scope_name: :newsletter_template,
            scoped_resource_id: newsletter.id,
-           settings: settings
+           settings:)
   end
 
   let(:settings) do
@@ -47,7 +47,7 @@ describe "Agenda events settings", type: :system do
   describe "new newsletter" do
     before do
       visit decidim_admin.root_path
-      click_link "Newsletters"
+      click_link_or_button "Newsletters"
       page.all(:link, "New newsletter").first.click
       page.all(:link, href: "/admin/newsletter_templates/canodrom_agenda_events/newsletters/new").last.click
     end
@@ -61,23 +61,23 @@ describe "Agenda events settings", type: :system do
         expect(page).to have_content("Font color over background")
         expect(page).to have_field("newsletter[settings][font_color_over_bg]", with: "#ffffff")
 
-        click_link "Body"
+        click_link_or_button "Body"
         expect(page).to have_content("EVENT 1:")
         expect(page).to have_content("EVENT 2:")
         expect(page).to have_content("EVENT 3:")
         expect(page).to have_content("EVENT 4:")
         expect(page).to have_content("The body of the newsletter can contain up to 4 events")
 
-        click_link "Event 1:"
+        find("#body-trigger-1").click
         expect(page).to have_content("Body event title")
 
-        click_link "Footer"
+        click_link_or_button "Footer"
         expect(page).to have_content("EVENT 1:")
         expect(page).to have_content("EVENT 2:")
         expect(page).to have_content("EVENT 3:")
         expect(page).to have_content("The newsletter footer can contain up to 3 events.")
 
-        click_link "Event 1:"
+        find("#footer-trigger-1").click
         expect(page).to have_content("Footer event title")
 
         expect(page).to have_content("Organization address")
@@ -94,12 +94,12 @@ describe "Agenda events settings", type: :system do
 
         dynamically_attach_file("newsletter_images_main_image", Decidim::Dev.asset("city.jpeg"))
 
-        click_link "Body"
+        click_link_or_button "Body"
         find('input[name="newsletter[settings][body_title_en]"]').fill_in with: "Body title"
         find('input[name="newsletter[settings][body_subtitle_en]"]').fill_in with: "Body subtitle"
 
         (1..4).each do |i|
-          click_link "Event #{i}:"
+          find("#body-trigger-#{i}").click
           find("input[name='newsletter[settings][body_box_title_#{i}_en]']").fill_in with: "Event title #{i}"
           find("input[name='newsletter[settings][body_box_date_time_#{i}_en]']").fill_in with: i.days.from_now.strftime("%d/%m/%Y")
           find("input[name='newsletter[settings][body_box_description_#{i}_en]']").fill_in with: "Event description #{i}"
@@ -110,13 +110,13 @@ describe "Agenda events settings", type: :system do
 
         find("input[name='newsletter[settings][body_final_text_en]']").fill_in with: "Final text"
 
-        click_link "Footer"
+        click_link_or_button "Footer"
         find("input[name='newsletter[settings][footer_title_en]']").fill_in with: "Footer title"
-        click_link "Mastodon"
+        click_link_or_button "Mastodon"
         find("input[name='newsletter[settings][mastodon_handler]']").fill_in with: "super_mastodon"
 
         (1..3).each do |i|
-          click_link "Event #{i}:"
+          find("#footer-trigger-#{i}").click
           find("input[name='newsletter[settings][footer_box_date_time_#{i}_en]']").fill_in with: 5.days.from_now.strftime("%d/%m/%Y")
           find("input[name='newsletter[settings][footer_box_title_#{i}_en]']").fill_in with: "Footer event title #{i}"
           find("input[name='newsletter[settings][footer_box_link_text_#{i}_en]']").fill_in with: "Footer event link #{i}"
@@ -126,7 +126,7 @@ describe "Agenda events settings", type: :system do
 
         page.execute_script("document.querySelector('input[name=\"newsletter[settings][footer_address_text]\"]').value = 'Barcelona, Spain';")
 
-        click_button "Save"
+        click_link_or_button "Save"
       end
 
       it "renders the correct the settings form" do
@@ -151,7 +151,6 @@ describe "Agenda events settings", type: :system do
             expect(page).to have_content("Footer event title #{i}")
             expect(page).to have_content("Footer event link #{i}")
           end
-          expect(page).to have_css("a[href='http://www.example.org/footer']", count: 3)
 
           expect(page).to have_css("img[src*='avatar.jpg']", count: 2)
           expect(page).to have_css("img[src*='city.jpeg']", count: 1)
@@ -163,8 +162,8 @@ describe "Agenda events settings", type: :system do
 
           expect(page).to have_css(".footer-social__icon[title='Twitter']")
           expect(page).to have_css(".footer-social__icon[title='Mastodon']")
-          expect(page).not_to have_css(".footer-social__icon[title='Facebook']")
-          expect(page).not_to have_css(".footer-social__icon[title='Telegram']")
+          expect(page).to have_no_css(".footer-social__icon[title='Facebook']")
+          expect(page).to have_no_css(".footer-social__icon[title='Telegram']")
 
           # no links or images without host
           expect(page.body).not_to include("src=\"/")

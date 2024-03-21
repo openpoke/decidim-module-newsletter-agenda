@@ -1,113 +1,121 @@
+
+<%= stylesheet_pack_tag "decidim_newsletter_agenda", media: :all %>
+
 <% form.fields_for :settings, settings do |settings_fields| %>
   <%= settings_fields.text_field :link_color, label: t(".link_color"), type: "color" %>
   <%= settings_fields.text_field :background_color, label: t(".background_color"), type: "color" %>
   <%= settings_fields.text_field :font_color_over_bg, label: t(".font_color_over_bg"), type: "color" %>
 <% end %>
 
-<ul class="tabs" data-tabs id="newsletter-tabs">
-  <li class="tabs-title is-active"><a href="#panel1" aria-selected="true"><%= t(".introduction") %></a></li>
-  <li class="tabs-title"><a data-tabs-target="panel2" href="#panel2"><%= t(".body") %></a></li>
-  <li class="tabs-title"><a data-tabs-target="panel3" href="#panel3"><%= t(".footer") %></a></li>
-</ul>
+<div class="layout-main__section" data-component="accordion" data-multiselectable="false" data-collapsible="false">
+  <ul class="tab-x-container tabs-3">
+    <li><button id="trigger-introduction" class="tab-x" data-controls="panel-introduction" data-open="true"><%= t(".introduction") %></button></li>
+    <li><button id="trigger-body" class="tab-x" data-controls="panel-body" data-open=""><%= t(".body") %></button></li>
+    <li><button id="trigger-footer" class="tab-x" data-controls="panel-footer" data-open=""><%= t(".footer") %></button></li>
+  </ul>
 
-<div class="tabs-content" data-tabs-content="newsletter-tabs">
-  <div class="tabs-panel is-active" id="panel1">
-    <fieldset class="fieldset">
-      <% form.fields_for :settings, settings do |settings_fields| %>
-        <%= settings_fields.translated :text_field, :intro_title, label: t(".intro_title") %>
-        <%= settings_fields.translated :editor, :intro_text, label: t(".intro_text") %>
-        <%= settings_fields.translated :text_field, :intro_link_text, label: t(".intro_link_text") if theme == :capitalitat %>
-        <%= settings_fields.text_field :intro_link_url, label: t(".intro_link_url") if theme == :capitalitat %>
-      <% end %>
-      <% form.fields_for :images, form.object.images do |images_fields| %>
-        <%= images_fields.upload :main_image, label: t(".main_image") %>
-      <% end %>
-    </fieldset>
-  </div>
-
-  <div class="tabs-panel" id="panel2">
-    <p><%= t(".tab_body_description") %></p>
-    <fieldset class="fieldset">
-      <% form.fields_for :settings, settings do |settings_fields| %>
-        <%= settings_fields.translated :text_field, :body_title, label: t(".body_title") unless theme == :capitalitat %>
-        <%= settings_fields.translated :text_field, :body_subtitle, label: t(".body_subtitle") unless theme == :capitalitat %>
-        <ul id="box-container" class="accordion" data-accordion data-multi-expand="true" data-allow-all-closed="true">
-          <% (1..4).each do |num| %>
-            <li class="box accordion-item" id="box<%= num %>" data-accordion-item>
-              <a href="#" class="accordion-title body-box-title"><%= t(".boxes_number_title", number: num) %>:</a>
-              <div class="accordion-content" data-tab-content>
-                <%= settings_fields.translated :text_field, "body_box_title_#{num}", label: t(".body_box_title") %>
-                <%= settings_fields.translated :text_field, "body_box_date_time_#{num}", label: t(".body_box_date_time") %>
-                <%= settings_fields.translated :text_field, "body_box_description_#{num}", label: t(".body_box_description"), maxlength: 250 %>
-                <%= settings_fields.translated :text_field, "body_box_link_text_#{num}", label: t(".body_box_link_text") %>
-                <%= settings_fields.translated :text_field, "body_box_link_url_#{num}", label: t(".body_box_link_url") %>
-                <% form.fields_for :images, form.object.images do |images_fields| %>
-                  <%= images_fields.upload :"body_box_image_#{num}", label: t(".body_box_image") %>
-                <% end %>
-              </div>
-            </li>
-          <% end %>
-        </ul>
-        <%= settings_fields.translated :text_field, :body_final_text, label: t(".body_final_text") unless theme == "capitalitat" %>
-      <% end %>
-    </fieldset>
-  </div>
-
-  <div class="tabs-panel" id="panel3">
-    <p><%= t(".tab_footer_description") %></p>
-    <fieldset class="fieldset">
-      <% form.fields_for :settings, settings do |settings_fields| %>
-        <%= settings_fields.translated :text_field, :footer_title, label: t(".footer_title") %>
-
-        <ul id="footer-container" class="accordion" data-accordion data-multi-expand="true" data-allow-all-closed="true">
-          <% (1..3).each do |num| %>
-            <li class="box accordion-item" id="box<%= num %>" data-accordion-item>
-              <a href="#" class="accordion-title body-box-title"><%= t(".boxes_number_title", number: num) %>:</a>
-              <div class="accordion-content" data-tab-content>
-                <%= settings_fields.translated :text_field, "footer_box_date_time_#{num}", label: t(".footer_box_date_time") %>
-                <%= settings_fields.translated :text_field, "footer_box_title_#{num}", label: t(".footer_box_title") %>
-                <%= settings_fields.translated :text_field, "footer_box_description_#{num}", label: t(".footer_box_description"), maxlength: 250 if theme == "capitalitat" %>
-                <%= settings_fields.translated :text_field, "footer_box_link_text_#{num}", label: t(".footer_box_link_text") %>
-                <%= settings_fields.translated :text_field, "footer_box_link_url_#{num}", label: t(".footer_box_link_url") %>
-                <% form.fields_for :images, form.object.images do |images_fields| %>
-                  <%= images_fields.upload :"footer_box_image_#{num}", label: t(".footer_box_image") %>
-                <% end %>
-              </div>
-            </li>
-          <% end %>
-        </ul>
-        <%= settings_fields.editor :footer_address_text, label: t(".footer_address") unless theme == :capitalitat %>
-        <%= settings_fields.translated :text_field, :footer_social_links_title, label: t(".footer_social_links_title") %>
-        <%= settings_fields.translated :text_field, :footer_additional_text if theme == :capitalitat %>
-
-        <div class="label--tabs">
-          <label for="organization_social_handlers">
-            <%= t(".social_handlers") %>
-          </label>
-          <ul class="tabs tabs--lang" data-tabs id="organization_social_handlers">
-            <% social_handlers&.each do |handler| %>
-              <li class="tabs-title <% if handler == social_handlers.first %> is-active <% end %>">
-                <a href="#<%= handler %>" <% if handler == social_handlers.first %> aria-selected="true" <% end %>>
-                  <%= t(".#{handler}") %>
-                </a>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-        <div class="tabs-content" data-tabs-content="organization_social_handlers">
-          <% social_handlers&.each do |handler| %>
-            <div class="tabs-panel <% if handler == social_handlers.first %> is-active <% end %>" id="<%= handler %>">
-              <%= settings_fields.text_field "#{handler}_handler", placeholder: t(".wont_show"), label: false %>
-            </div>
-          <% end %>
-        </div>
+    <div class="py-8" id="panel-introduction">
+      <fieldset class="fieldset">
+        <% form.fields_for :settings, settings do |settings_fields| %>
+          <%= settings_fields.translated :text_field, :intro_title, label: t(".intro_title") %>
+          <%= settings_fields.translated :editor, :intro_text, label: t(".intro_text") %>
+          <%= settings_fields.translated :text_field, :intro_link_text, label: t(".intro_link_text") if theme == :capitalitat %>
+          <%= settings_fields.text_field :intro_link_url, label: t(".intro_link_url") if theme == :capitalitat %>
         <% end %>
-    </fieldset>
+        <% form.fields_for :images, form.object.images do |images_fields| %>
+          <%= images_fields.upload :main_image, label: t(".main_image"), class: "bg-newsletterblue" %>
+        <% end %>
+      </fieldset>
+    </div>
+
+    <div class="py-8" id="panel-body">
+      <p><%= t(".tab_body_description") %></p>
+      <fieldset class="fieldset">
+        <% form.fields_for :settings, settings do |settings_fields| %>
+          <%= settings_fields.translated :text_field, :body_title, label: t(".body_title") unless theme == :capitalitat %>
+          <%= settings_fields.translated :text_field, :body_subtitle, label: t(".body_subtitle") unless theme == :capitalitat %>
+          <div class="c-accordion text-newsletterblue" data-component="accordion">
+            <% (1..4).each do |num| %>
+              <button role="heading" aria-level="3" class="flex flex-col gap-8 w-full bg-gray-6">
+                <a href="#" id="body-trigger-<%= num %>" class="c-accordion__trigger uppercase bg-gray-6 px-8 py-4 w-full hover:underline flex items-center justify-between" data-controls="accordion-panel-<%= num %>">
+                  <span><%= t(".boxes_number_title", number: num) %>:</span>
+                  <%= icon "add-line" %>
+                </a>
+              </button>
+                <div id="accordion-panel-<%= num %>" class="c-accordion__panel">
+                  <%= settings_fields.translated :text_field, "body_box_title_#{num}", label: t(".body_box_title") %>
+                  <%= settings_fields.translated :text_field, "body_box_date_time_#{num}", label: t(".body_box_date_time") %>
+                  <%= settings_fields.translated :text_field, "body_box_description_#{num}", label: t(".body_box_description"), maxlength: 250, class: "mb-0 !mb-0" %>
+                  <%= settings_fields.translated :text_field, "body_box_link_text_#{num}", label: t(".body_box_link_text") %>
+                  <%= settings_fields.translated :text_field, "body_box_link_url_#{num}", label: t(".body_box_link_url") %>
+                  <% form.fields_for :images, form.object.images do |images_fields| %>
+                    <%= images_fields.upload :"body_box_image_#{num}", label: t(".body_box_image"), class: "bg-red text-white" %>
+                  <% end %>
+                </div>
+            <% end %>
+          </div>
+          <%= settings_fields.translated :text_field, :body_final_text, label: t(".body_final_text") unless theme == "capitalitat" %>
+        <% end %>
+      </fieldset>
+    </div>
+
+    <div class="py-8" id="panel-footer">
+      <p><%= t(".tab_footer_description") %></p>
+      <fieldset class="fieldset">
+        <% form.fields_for :settings, settings do |settings_fields| %>
+          <%= settings_fields.translated :text_field, :footer_title, label: t(".footer_title") %>
+
+          <div class="text-newsletterblue" data-component="accordion">
+            <% (1..3).each do |num| %>
+              <button role="heading" aria-level="3" class="flex flex-col gap-8 w-full bg-gray-6">
+                <a href="#" id="footer-trigger-<%= num %>" data-controls="panel-<%= num %>" class="uppercase bg-gray-6 px-8 py-4 w-full hover:underline flex items-center justify-between">
+                  <span><%= t(".boxes_number_title", number: num) %>:</span>
+                  <%= icon "add-line" %>
+                </a>
+              </button>
+              <div id="panel-<%= num %>" aria-hidden="true">
+                <div class="c-accordion__inner">
+                  <%= settings_fields.translated :text_field, "footer_box_date_time_#{num}", label: t(".footer_box_date_time") %>
+                  <%= settings_fields.translated :text_field, "footer_box_title_#{num}", label: t(".footer_box_title") %>
+                  <%= settings_fields.translated :text_field, "footer_box_description_#{num}", label: t(".footer_box_description"), maxlength: 250 if theme == "capitalitat" %>
+                  <%= settings_fields.translated :text_field, "footer_box_link_text_#{num}", label: t(".footer_box_link_text") %>
+                  <%= settings_fields.translated :text_field, "footer_box_link_url_#{num}", label: t(".footer_box_link_url") %>
+                  <% form.fields_for :images, form.object.images do |images_fields| %>
+                    <%= images_fields.upload :"footer_box_image_#{num}", label: t(".footer_box_image") %>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          <%= settings_fields.editor :footer_address_text, label: t(".footer_address") unless theme == :capitalitat %>
+          <%= settings_fields.translated :text_field, :footer_social_links_title, label: t(".footer_social_links_title") %>
+          <%= settings_fields.translated :text_field, :footer_additional_text if theme == :capitalitat %>
+
+          <div class="layout-main__section" data-component="accordion" data-multiselectable="false" data-collapsible="false">
+            <label for="organization_social_handlers">
+              <%= t(".social_handlers") %>
+            </label>
+            <ul class="tab-x-container tabs-8" id="organization_social_handlers">
+              <% social_handlers&.each do |handler| %>
+                <li>
+                  <a href="#<%= handler %>" data-open="<%= handler == social_handlers.first ? 'true' : "" %>" class="tab-x" data-controls="panel-<%= handler %>" id="trigger-<%= handler %>">
+                    <%= t(".#{handler}") %>
+                  </a>
+                </li>
+              <% end %>
+            </ul>
+              <% social_handlers&.each do |handler| %>
+                <div class="pt-4 pb-px" id="panel-<%= handler %>">
+                  <%= settings_fields.text_field "#{handler}_handler", placeholder: t(".wont_show"), label: false %>
+                </div>
+              <% end %>
+          </div>
+          <% end %>
+      </fieldset>
+    </div>
+
+  <div class="row column">
+    <%= t(".interpolations_hint") %>
   </div>
-</div>
 
-<div class="row column">
-  <%= t(".interpolations_hint") %>
 </div>
-
-<%= stylesheet_pack_tag "decidim_newsletter_agenda" %>

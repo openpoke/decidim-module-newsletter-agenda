@@ -16,10 +16,12 @@ gem 'decidim-newsletter_agenda', github: 'openpoke/decidim-module-newsletter_age
 
 ```
 
-And then execute:
+Run this rake tasks:
 
 ```
-bundle
+bundle exec rake decidim_newsletter_agenda:install:migrations
+bundle exec rails decidim_newsletter_agenda:webpacker:install
+bundle exec rake db:migrate
 ```
 
 ## Usage
